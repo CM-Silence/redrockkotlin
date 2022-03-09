@@ -20,7 +20,7 @@ class MyLinkedBlockingQueue<T>(private val max : Int) {
 
     private var num : Int = 0 //当前集合中的元素个数
 
-    public fun put(item : T){
+    fun put(item : T){
         lock.lock() //先锁上
         try {
             while (num == max){ //如果容量满了就堵塞线程
@@ -38,7 +38,7 @@ class MyLinkedBlockingQueue<T>(private val max : Int) {
         }
     }
 
-    public fun take() : T{
+    fun take() : T{
         lock.lock() //先锁上
         try {
             while (num == 0){ //如果集合空了就堵塞线程
