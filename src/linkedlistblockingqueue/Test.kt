@@ -6,7 +6,7 @@ import java.util.Scanner
 //LinkedList封装实现阻塞队列功能
 fun main() {
     val linkedListBlockingQueue : MyLinkedBlockingQueue<String> = MyLinkedBlockingQueue(20)
-    val putTime = 500L
+    val putTime = 1000L
     val takeTime = 1000L
     Thread{
         var i = 0

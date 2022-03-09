@@ -25,14 +25,14 @@ class MyLinkedBlockingQueue<T>(private val max : Int) {
         try {
             while (num == max){ //如果容量满了就堵塞线程
                 try {
-                    notFull.await()
+                    notFull.await() //如果容量满了就锁上notFull来堵塞线程
                 }catch (e : Exception){
                     e.printStackTrace()
                 }
             }
             linkedList.add(item)
             num++
-            notEmpty.signal()
+            notEmpty.signal() //如果put方法成功将一个元素放进集合中的话说明集合不为空,则解锁take方法中的notEmpty
         }finally {
             lock.unlock() //解锁
         }
@@ -41,16 +41,16 @@ class MyLinkedBlockingQueue<T>(private val max : Int) {
     public fun take() : T{
         lock.lock() //先锁上
         try {
-            while (num == 0){ //如果容量空了就堵塞线程
+            while (num == 0){ //如果集合空了就堵塞线程
                 try {
-                    notEmpty.await()
+                    notEmpty.await() //如果集合空了就锁上notEmpty来堵塞线程
                 }catch (e : Exception){
                     e.printStackTrace()
                 }
             }
             val item : T = linkedList.removeFirst()
             num--
-            notFull.signal()
+            notFull.signal() //如果take方法成功拿出一个元素的话说明集合没满,则解锁put方法中的notFull
             return item
         }finally {
             lock.unlock() //解锁
