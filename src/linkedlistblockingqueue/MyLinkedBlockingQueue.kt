@@ -6,9 +6,7 @@ import java.util.concurrent.locks.ReentrantLock
 
 //work 1
 //LinkedList封装实现阻塞队列功能
-class MyLinkedBlockingQueue<T>(private val max : Int) {
-
-    constructor() : this(Int.MAX_VALUE) //无参次构造函数,调用主构造函数将集合容量设为最大值
+class MyLinkedBlockingQueue<T>(private val max : Int = Int.MAX_VALUE) {
 
     private val linkedList : LinkedList<T> = LinkedList() //储存数据的集合
 
