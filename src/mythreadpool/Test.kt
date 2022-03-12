@@ -27,27 +27,34 @@ fun main() {
     }
     Thread{
         repeat(30){
-            myThreadPool.execute(MyTask())
+            myThreadPool.execute(MyTask()) //瞬间添加
         }
     }.start()
 
     Thread{
         repeat(20){
             Thread.sleep(500L)
-            myThreadPool.execute(MyTask())
+            myThreadPool.execute(MyTask()) //每0.5秒添加1次,在第10秒时全部添加完成
         }
     }.start()
 
     Thread{
         repeat(20){
             Thread.sleep(1000L)
-            myThreadPool.execute(MyTask())
+            myThreadPool.execute(MyTask()) //每1秒添加1次,在第20秒时全部添加完成
+        }
+    }.start()
+
+    Thread{
+        repeat(15){
+            Thread.sleep(2000L)
+            myThreadPool.execute(MyTask()) //每2秒添加1次,在第30秒时全部添加完成
         }
         println("拒绝的任务总数为:${myThreadPool.rejectTaskCount}")
     }.start()
 
     Thread{
-        Thread.sleep(15000L)
+        Thread.sleep(25000L)
         myThreadPool.setIsShutDown(true) //一定时间后关闭线程池
     }.start()
 }

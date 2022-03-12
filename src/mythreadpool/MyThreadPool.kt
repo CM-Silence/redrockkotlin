@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
                    private val maxCurSize :Int, //最大线程数
-                   private val keepAliveTime : Long, //最大空闲时间
+                   private val keepAliveTime : Long, //非核心线程最大空闲时间
                    @Volatile private var taskQueue : BlockingQueue<Runnable>, //并发任务队列,控制并发拉取
                    private val handler : RejectHandler = MyRejectHandler()) //拒绝策略
 {
@@ -17,7 +17,7 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
     private var freeNonCorePool : ConcurrentLinkedQueue<NonCoreThread> = ConcurrentLinkedQueue() //空闲非核心线程队列
 
     private var taskQueueSize : AtomicInteger = AtomicInteger(0) //当前待执行任务队列大小
-    private val taskQueueCapacity : Int = 10 //任务队列容量(最多接取的任务数量)
+    private val taskQueueCapacity : Int = 10 //待执行任务队列容量(若等待执行的任务大于队列容量则在完成一个任务前不再接受新增的任务)
 
     var rejectTaskCount : AtomicInteger = AtomicInteger(0) //拒绝的任务数量
 
@@ -69,7 +69,8 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
          */
         @JvmStatic
         fun newCachedThreadPool() : MyThreadPool {
-            return MyThreadPool(AtomicInteger(1), Int.MAX_VALUE,60 * 1000L,LinkedBlockingDeque())
+            //原本keepAliveTime是60秒的,但因为这里任务的执行速度较快,于是改为了5秒
+            return MyThreadPool(AtomicInteger(1), Int.MAX_VALUE,5 * 1000L,LinkedBlockingDeque())
         }
 
     }
