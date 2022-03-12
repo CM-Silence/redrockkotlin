@@ -19,6 +19,8 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
     private var taskQueueSize : AtomicInteger = AtomicInteger(0) //当前待执行任务队列大小
     private val taskQueueCapacity : Int = 10 //任务队列容量(最多接取的任务数量)
 
+    var rejectTaskCount : AtomicInteger = AtomicInteger(0) //拒绝的任务数量
+
 
     //初始化空闲核心线程
     init {
@@ -144,6 +146,7 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
     private fun reject(task : Runnable,reason : String){
         handler.setReason(reason)
         handler.reject(task)
+        this.rejectTaskCount.incrementAndGet()
     }
 
     //关闭线程池

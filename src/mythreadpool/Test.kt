@@ -43,6 +43,7 @@ fun main() {
             Thread.sleep(1000L)
             myThreadPool.execute(MyTask())
         }
+        println("拒绝的任务总数为:${myThreadPool.rejectTaskCount}")
     }.start()
 
     Thread{
