@@ -24,34 +24,49 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
 
     //初始化空闲核心线程
     init {
-        val core = CoreThread()
-        core.name = "core"
-        freeCorePool.add(core)
-
+        for(i in 0 until curSize.toInt()) {
+            val core = CoreThread()
+            core.name = "core$i"
+            freeCorePool.add(core)
+        }
     }
 
     companion object {
 
+        /**
+         * @description:创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序执行
+         * @return: MyThreadPool
+         */
         @JvmStatic
         fun newSingleThreadExecutor() : MyThreadPool{
             return MyThreadPool(AtomicInteger(1), 1,0L,LinkedBlockingDeque())
 
         }
 
+        /**
+         * @description:创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待
+         * @return: MyThreadPool
+         */
         @JvmStatic
         fun newFixedThreadPool(poolSize : Int) : MyThreadPool{
-            return MyThreadPool(AtomicInteger(1), poolSize,10 * 1000L,LinkedBlockingDeque())
-
+            return MyThreadPool(AtomicInteger(poolSize), poolSize,0L,LinkedBlockingDeque())
         }
 
         /*暂时没实现
+        /**
+         * @description:创建一个定长线程池，支持定时及周期性任务执行
+         * @return: MyThreadPool
+         */
         @JvmStatic
         fun newScheduledThreadPool(corePoolSize : AtomicInteger) : MyThreadPool{
             return MyThreadPool(corePoolSize, Int.MAX_VALUE,60 * 1000L,SynchronousQueue())
-
         }
         */
 
+        /**
+         * @description:创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程
+         * @return: MyThreadPool
+         */
         @JvmStatic
         fun newCachedThreadPool() : MyThreadPool {
             return MyThreadPool(AtomicInteger(1), Int.MAX_VALUE,60 * 1000L,LinkedBlockingDeque())
