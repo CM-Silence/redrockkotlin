@@ -22,11 +22,10 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
 
     //初始化空闲核心线程
     init {
-        for(i in 0 until curSize.toInt()){
-            val core = CoreThread()
-            core.name = "core$i"
-            freeCorePool.add(core)
-        }
+        val core = CoreThread()
+        core.name = "core"
+        freeCorePool.add(core)
+
     }
 
     companion object {
@@ -38,8 +37,8 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
         }
 
         @JvmStatic
-        fun newFixedThreadPool(poolSize : AtomicInteger) : MyThreadPool{
-            return MyThreadPool(poolSize, poolSize.toInt(),0L,LinkedBlockingDeque())
+        fun newFixedThreadPool(poolSize : Int) : MyThreadPool{
+            return MyThreadPool(AtomicInteger(1), poolSize,0L,LinkedBlockingDeque())
 
         }
 
@@ -66,14 +65,14 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
      * 4.如果队列已满且已达最大线程数，那么拒绝任务
      * @return: void
      */
-    public fun execute(task : Runnable) {
+    fun execute(task : Runnable) {
         if (isShutDown) {   //如果线程池已经关闭
-            reject(task) //拒绝任务
+            reject(task,"线程池已关闭") //拒绝任务
         }
         //如果无法从核心线程池拉取线程后也无法从非核心线程池拉取线程后且任务容量已满
         else if (!executeByCore(task) && !executeByNonCore(task) && !waitInTaskQueue(task)) {
             if (curSize.get() == maxCurSize) { //如果达到了最大线程数
-                reject(task) //拒绝任务
+                reject(task,"线程数达到上限") //拒绝任务
             }
             else if (curSize.incrementAndGet() <= maxCurSize) { //如果没达到最大线程数
                 val nonCore = NonCoreThread() //新建非核心线程
@@ -83,7 +82,7 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
             }
             else { //添加任务失败
                 curSize.decrementAndGet() //线程数-1(因为上面将线程数+1进行了判断)
-                reject(task) //拒绝任务
+                reject(task,"未知原因") //拒绝任务
             }
         }
     }
@@ -140,11 +139,15 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
         }
     }
 
-    /**
-     * @description: 拒绝当前任务
-     */
-    private fun reject(task : Runnable){
+    //拒绝当前任务
+    private fun reject(task : Runnable,reason : String){
+        handler.setReason(reason)
         handler.reject(task)
+    }
+
+    //关闭线程池
+    fun setIsShutDown(isShutDown : Boolean){
+        this.isShutDown = isShutDown
     }
 
     /**
