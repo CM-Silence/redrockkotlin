@@ -26,7 +26,7 @@ fun main() {
         }
     }
     Thread{
-        repeat(20){
+        repeat(30){
             myThreadPool.execute(MyTask())
         }
     }.start()
