@@ -43,6 +43,7 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
 
         }
 
+        /*暂时没实现
         @JvmStatic
         fun newScheduledThreadPool(corePoolSize : AtomicInteger) : MyThreadPool{
             return MyThreadPool(corePoolSize, Int.MAX_VALUE,60 * 1000L,SynchronousQueue())
@@ -53,6 +54,7 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
         fun newCachedThreadPool() : MyThreadPool {
             return MyThreadPool(AtomicInteger(0), Int.MAX_VALUE,60 * 1000L,SynchronousQueue())
         }
+        */
     }
 
     /**

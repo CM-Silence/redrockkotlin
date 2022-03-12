@@ -4,7 +4,7 @@ import java.util.Scanner
 import java.util.concurrent.atomic.AtomicInteger
 
 fun main() {
-    val myThreadPool = MyThreadPool.newFixedThreadPool(AtomicInteger(5))
+    val myThreadPool = MyThreadPool.newSingleThreadExecutor()
     Thread{
         repeat(10){
         myThreadPool.execute(MyTask())
