@@ -48,12 +48,13 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
             return MyThreadPool(corePoolSize, Int.MAX_VALUE,60 * 1000L,SynchronousQueue())
 
         }
+        */
 
         @JvmStatic
         fun newCachedThreadPool() : MyThreadPool {
-            return MyThreadPool(AtomicInteger(0), Int.MAX_VALUE,60 * 1000L,SynchronousQueue())
+            return MyThreadPool(AtomicInteger(1), Int.MAX_VALUE,60 * 1000L,LinkedBlockingDeque())
         }
-        */
+
     }
 
     /**

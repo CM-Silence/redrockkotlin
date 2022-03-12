@@ -16,10 +16,11 @@ fun main() {
         "3" ->{
             MyThreadPool.newScheduledThreadPool(AtomicInteger(5))
         }
+        */
         "4" ->{
             MyThreadPool.newCachedThreadPool()
         }
-        */
+
         else ->{
             MyThreadPool.newSingleThreadExecutor()
         }
