@@ -32,15 +32,15 @@ fun main() {
     }.start()
 
     Thread{
-        repeat(15){
+        repeat(20){
             Thread.sleep(500L)
             myThreadPool.execute(MyTask())
         }
     }.start()
 
     Thread{
-        repeat(15){
-            Thread.sleep(1500L)
+        repeat(20){
+            Thread.sleep(1000L)
             myThreadPool.execute(MyTask())
         }
     }.start()
