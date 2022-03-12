@@ -38,7 +38,7 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
 
         @JvmStatic
         fun newFixedThreadPool(poolSize : Int) : MyThreadPool{
-            return MyThreadPool(AtomicInteger(1), poolSize,0L,LinkedBlockingDeque())
+            return MyThreadPool(AtomicInteger(1), poolSize,10 * 1000L,LinkedBlockingDeque())
 
         }
 

@@ -1,7 +1,6 @@
 package mythreadpool
 
 import java.util.Scanner
-import java.util.concurrent.atomic.AtomicInteger
 
 fun main() {
     println("请选择线程池:\n1.SingleThreadExecutor\n2.FixedThreadPool(容量为5)\n3.ScheduledThreadPool(容量为5)\n4.CachedThreadPool\n输入其他内容则默认为SingleThreadExecutor")
@@ -45,5 +44,8 @@ fun main() {
         }
     }.start()
 
-    //myThreadPool.setIsShutDown(true)
+    Thread{
+        Thread.sleep(15000L)
+        myThreadPool.setIsShutDown(true) //一定时间后关闭线程池
+    }.start()
 }
