@@ -13,7 +13,7 @@ class MyTask(private val num: Int = sum.getAndIncrement()) : Runnable {  //将�
     override fun run() {
         try {
             if(num % 5 == 1){
-                throw java.lang.Exception("${Thread.currentThread().name}执行任务——${num}失败!")
+                throw java.lang.Exception("${Thread.currentThread().name}执行任务——${num}失败!") //模拟报错
             }
             println("${Thread.currentThread().name}准备执行任务——$num")
             Thread.sleep(500L)

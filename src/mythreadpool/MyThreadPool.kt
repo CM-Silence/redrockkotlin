@@ -175,8 +175,12 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
             //当线程池没有关闭或任务队列没空前反复执行
             while (!isShutDown || !taskQueue.isEmpty()) {
                 if (task != null) { //如果任务不为空则执行任务
-                    task?.run() //执行任务
-                    println(currentThread().name + "完成任务——" + task)
+                    try {
+                        task?.run() //尝试执行任务
+                        println(currentThread().name + "完成任务——" + task)
+                    }catch (e : Exception){
+                        e.printStackTrace()
+                    }
                     task = null //任务完成后将线程的task属性设值为null
                 }
                 //如果核心线程不空闲且没有任务(task为null)则反复尝试拉取任务
@@ -219,8 +223,12 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
             //当(线程池没关闭或任务队列不为空)且(线程不空闲或空闲时间没超过最大空闲时间)时反复执行
             while ((!isShutDown || !taskQueue.isEmpty()) && (!isFree || System.currentTimeMillis() - beginFree < keepAliveTime)) {
                 if (task != null) { //如果任务不为空
-                    task?.run() //线程开始执行任务
-                    println(currentThread().name + "完成任务——" + task)
+                    try {
+                        task?.run() //尝试执行任务
+                        println(currentThread().name + "完成任务——" + task)
+                    }catch (e : Exception){
+                        e.printStackTrace()
+                    }
                     task = null //完成任务后将线程的task属性设为空
                 }
                 if(!isFree&&task==null) //如果线程不空闲且线程的任务为空
