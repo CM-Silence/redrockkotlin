@@ -163,6 +163,7 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
             if(task != null){ //如果拉取到了任务
                 setTask(task) //设置线程的任务
                 taskQueueSize.decrementAndGet() //待执行任务队列大小-1
+                freeCorePool.remove(this) //移出空闲核心线程队列
             }
             else{ //如果没拉取到任务
                 isFree = true //将核心线程设为空闲状态
@@ -210,6 +211,7 @@ class MyThreadPool(private var curSize : AtomicInteger, //核心线程数
             if(task != null){ //如果任务不为空
                 setTask(task) //设置该线程的任务
                 taskQueueSize.decrementAndGet() //将待执行任务队列大小-1
+                freeNonCorePool.remove(this) //移出空闲核心线程队列
             }
             else{ //如果任务为空
                 isFree = true //将线程设为空闲
